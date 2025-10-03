@@ -52,30 +52,37 @@
                 },
                 "errorUrl": { "type": "string" },
                 "response_url": { "type": "string" },
-
-                 "aliases": {
+                "aliases": {
                     "type": "array",
-                    "items": {
-                    "type": "string"
-                    }
-                },
-            "dependencies": {
-                "errorMsg": {
-                    "properties" : { "errorType": { "const": "message" } }
-                },
-                "errorUrl": {
-                    "properties": { "errorType": { "const": "response_url" } }
-                },
-                "errorCode": {
-                    "properties": { "errorType": { "const": "status_code" } }
+                    "items": { "type": "string" }
                 }
             },
-            "if": { "properties": { "errorType": { "const": "message" } } },
-            "then": { "required": [ "errorMsg" ] },
-            "else": {
-                "if": { "properties": { "errorType": { "const": "response_url" } } },
-                "then": { "required": [ "errorUrl" ] }
-            },
+            "allOf": [
+                {
+                    "if": {
+                        "properties": { "errorType": { "const": "message" } }
+                    },
+                    "then": {
+                        "required": [ "errorMsg" ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": { "errorType": { "const": "response_url" } }
+                    },
+                    "then": {
+                        "required": [ "errorUrl" ]
+                    }
+                },
+                {
+                    "if": {
+                        "properties": { "errorType": { "const": "status_code" } }
+                    },
+                    "then": {
+                        "required": [ "errorCode" ]
+                    }
+                }
+            ],
             "additionalProperties": false
         }
     },
